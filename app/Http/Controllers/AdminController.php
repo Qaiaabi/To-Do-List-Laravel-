@@ -18,7 +18,7 @@ class AdminController extends Controller
                 return view('admin.index');
             }
             else if($user_type == 'user'){
-                return view('home.index');
+                return view('user.index');
             }
         }
         else {

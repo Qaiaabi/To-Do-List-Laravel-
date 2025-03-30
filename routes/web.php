@@ -14,8 +14,8 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', action: function () {
+    return view('home.index');
 });
 
 Route::middleware([
