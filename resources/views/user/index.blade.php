@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +9,44 @@
     <style>
         /* Animasi background gradient */
         @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
+
         body {
             background: linear-gradient(-45deg, #0d0d0d, #1b1f38, #212a45, #0d0d0d);
             background-size: 400% 400%;
             animation: gradientMove 15s infinite linear;
         }
+
         /* Sidebar dan konten transition */
-        .sidebar { transition: transform 0.3s, width 0.3s; }
-        .content { transition: margin-left 0.3s; }
-        .sidebar.active { transform: translateX(0); }
-        .content.active { margin-left: 16rem; }
+        .sidebar {
+            transition: transform 0.3s, width 0.3s;
+        }
+
+        .content {
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .content.active {
+            margin-left: 16rem;
+        }
     </style>
 </head>
+
 <body class="h-screen flex text-white">
 
     <!-- Sidebar -->
@@ -75,31 +98,38 @@
                     <option>Medium</option>
                     <option>High</option>
                 </select>
-                <button class="bg-blue-500 px-3 py-2 rounded">➕ Add Task</button>
+                <form id="taskForm">
+                    <input type="text" id="taskTitle" placeholder="Task Name" required class="rounded bg-gray-900 text-white border p-2 rounded">
+                    <input type="date" id="taskDueDate" required class="rounded bg-gray-900 text-white border p-2 rounded">
+                    <select id="taskPriority" class="rounded bg-gray-900 text-white border p-2 rounded">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <select id="taskStatus" class="rounded bg-gray-900 text-white border p-2 rounded">
+                        <option value="to_do">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                    </select>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Add Task</button>
+                </form>
+
             </div>
-            <table class="min-w-full bg-gray-800 border border-gray-700 rounded-lg">
+            <table class="w-full border-collapse border border-gray-300 text-white">
                 <thead>
-                    <tr class="bg-gray-700 text-gray-300">
-                        <th class="py-3 px-4 text-left">Task</th>
-                        <th class="py-3 px-4 text-left">Due Date</th>
-                        <th class="py-3 px-4 text-left">Priority</th>
-                        <th class="py-3 px-4 text-left">Status</th>
-                        <th class="py-3 px-4 text-left">Actions</th>
+                    <tr class="bg-gray-700 text-white">
+                        <th class="border p-2">Task</th>
+                        <th class="border p-2">Due Date</th>
+                        <th class="border p-2">Priority</th>
+                        <th class="border p-2">Status</th>
+                        <th class="border p-2">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="border-b border-gray-700">
-                        <td class="py-3 px-4">Complete UI Design</td>
-                        <td class="py-3 px-4">April 5, 2025</td>
-                        <td class="py-3 px-4">High</td>
-                        <td class="py-3 px-4">In Progress</td>
-                        <td class="py-3 px-4">
-                            <button class="bg-blue-500 px-3 py-1 rounded text-white">Edit</button>
-                            <button class="bg-red-500 px-3 py-1 rounded text-white ml-2">Delete</button>
-                        </td>
-                    </tr>
+                <tbody id="taskTableBody">
+                    <!-- Data dari backend akan dimasukkan di sini -->
                 </tbody>
             </table>
+
         </section>
 
         <!-- Settings Page -->
@@ -139,5 +169,79 @@
         }
     </script>
 
+<script>
+document.getElementById("taskForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    let title = document.getElementById("taskTitle").value;
+    let dueDate = document.getElementById("taskDueDate").value;
+    let priority = document.getElementById("taskPriority").value;
+    let status = document.getElementById("taskStatus").value;
+
+    fetch("http://127.0.0.1:8000/api/tasks", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: title,
+            due_date: dueDate,
+            priority: priority,
+            status: status
+        })
+    })
+    .then(response => response.json())
+    .then(() => {
+        fetchTasks(); // Refresh data di tabel
+        document.getElementById("taskForm").reset();
+    })
+    .catch(error => console.error("Error adding task:", error));
+});
+</script>
+y
+    <script>
+        document.getElementById("taskForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let title = document.getElementById("taskTitle").value;
+            let dueDate = document.getElementById("taskDueDate").value;
+            let priority = document.getElementById("taskPriority").value;
+            let status = document.getElementById("taskStatus").value;
+
+            fetch("http://127.0.0.1:8000/api/tasks", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        due_date: dueDate,
+                        priority: priority,
+                        status: status
+                    })
+                })
+                .then(response => response.json())
+                .then(() => {
+                    fetchTasks(); // Refresh data di tabel
+                    document.getElementById("taskForm").reset();
+                })
+                .catch(error => console.error("Error adding task:", error));
+        });
+    </script>
+
+    <script>
+        function deleteTask(taskId) {
+            if (confirm("Are you sure you want to delete this task?")) {
+                fetch(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+                        method: "DELETE"
+                    })
+                    .then(() => fetchTasks())
+                    .catch(error => console.error("Error deleting task:", error));
+            }
+        }
+    </script>
+
+
 </body>
+
 </html>

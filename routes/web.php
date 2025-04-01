@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,10 @@ Route::middleware([
 
 
 route::get('/home',[AdminController::class, 'index']);
+
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index'); // Menampilkan daftar tugas
+Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); // Form tambah task
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store'); // Menyimpan task baru
+Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit'); // Form edit task
+Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update'); // Update task
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy'); // Hapus task
